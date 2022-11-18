@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:project_management/home.dart';
 
 class SplashScreen extends StatefulWidget {
-  _SplashScreen createState() => _SplashScreen();
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreen();
 }
 
 class _SplashScreen extends State<SplashScreen> {
+  @override
   void initState() {
     super.initState();
     splashscreenStart();
@@ -15,12 +19,18 @@ class _SplashScreen extends State<SplashScreen> {
 
   splashscreenStart() async {
     var duration = const Duration(seconds: 3);
-    return Timer(duration, () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
-    });
+    return Timer(
+      duration,
+      () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Home(),
+          ),
+          (route) => false,
+        );
+      },
+    );
   }
 
   @override
@@ -31,8 +41,7 @@ class _SplashScreen extends State<SplashScreen> {
         child: Lottie.network(
             //taruh link json dibawah ini
             "https://assets8.lottiefiles.com/packages/lf20_BJ9mFCqhen.json",
-            width: 1000,
-            height: 500,
+            width: 200,
             animate: true),
       ),
     );
