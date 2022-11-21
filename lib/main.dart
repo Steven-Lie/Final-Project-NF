@@ -13,7 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Final Project NF',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ThemeData().colorScheme.copyWith(
+              primary: const Color(0XFF4C53FF),
+            ),
       ),
       home: const SplashScreen(),
     );

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
-import 'package:project_management/home.dart';
+import 'package:project_management/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,7 +25,7 @@ class _SplashScreen extends State<SplashScreen> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => Home(),
+            builder: (context) => Login(),
           ),
           (route) => false,
         );
