@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:project_management/register.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -7,6 +10,24 @@ class Login extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  void login() async {
+    try {
+      var response = await http.post(
+          Uri.parse('https://api2.sib3.nurulfikri.com/api/auth/login'),
+          body: {
+            'email': _emailController.text,
+            'password': _passwordController.text,
+          });
+
+      if (response.statusCode == 200) {
+        var responseBody = jsonDecode(response.body);
+        print(responseBody);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +129,7 @@ class Login extends StatelessWidget {
                         width: MediaQuery.of(context).size.width / 2.5,
                         child: ElevatedButton(
                           onPressed: () {
+                            login();
                             if (_formKey.currentState!.validate()) {}
                           },
                           style: ButtonStyle(
