@@ -129,8 +129,9 @@ class Login extends StatelessWidget {
                         width: MediaQuery.of(context).size.width / 2.5,
                         child: ElevatedButton(
                           onPressed: () {
-                            login();
-                            if (_formKey.currentState!.validate()) {}
+                            if (_formKey.currentState!.validate()) {
+                              login();
+                            }
                           },
                           style: ButtonStyle(
                             shape: MaterialStateProperty.all(
