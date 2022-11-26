@@ -1,8 +1,44 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:project_management/login.dart';
 
 class Register extends StatelessWidget {
-  const Register({super.key});
+  Register({super.key});
+
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _passwordConfirmationController = TextEditingController();
+
+  void register() async {
+    try {
+      var response = await post(
+          Uri.parse('https://api2.sib3.nurulfikri.com/api/auth/register'),
+          body: {
+            'first_name': _firstNameController.text,
+            'last_name': _lastNameController.text,
+            'username': _usernameController.text,
+            'email': _emailController.text,
+            'phone_number': _phoneNumberController.text,
+            'password': _passwordController.text,
+            'password_confirmation': _passwordConfirmationController.text,
+          });
+
+      var responseBody = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        print(responseBody['info']);
+      } else {
+        print(responseBody['info']);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +63,7 @@ class Register extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
+                        controller: _firstNameController,
                         decoration: InputDecoration(
                           labelText: 'first name',
                           prefixIcon: const Icon(Icons.person),
@@ -49,6 +86,7 @@ class Register extends StatelessWidget {
                         height: 16.0,
                       ),
                       TextFormField(
+                        controller: _lastNameController,
                         decoration: InputDecoration(
                           labelText: 'last name',
                           prefixIcon: const Icon(Icons.person),
@@ -71,6 +109,30 @@ class Register extends StatelessWidget {
                         height: 16.0,
                       ),
                       TextFormField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'username',
+                          prefixIcon: const Icon(Icons.person),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0xFF787878),
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Color(0XFF4C53FF),
+                              width: 2,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      TextFormField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'email',
                           prefixIcon: const Icon(Icons.mail),
@@ -93,6 +155,7 @@ class Register extends StatelessWidget {
                         height: 16.0,
                       ),
                       TextFormField(
+                        controller: _phoneNumberController,
                         decoration: InputDecoration(
                           labelText: 'phone number',
                           prefixIcon: const Icon(Icons.phone_android),
@@ -115,6 +178,7 @@ class Register extends StatelessWidget {
                         height: 16.0,
                       ),
                       TextFormField(
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: 'password',
                           prefixIcon: const Icon(Icons.key),
@@ -138,6 +202,7 @@ class Register extends StatelessWidget {
                         height: 16.0,
                       ),
                       TextFormField(
+                        controller: _passwordConfirmationController,
                         decoration: InputDecoration(
                           labelText: 'password confirmation',
                           prefixIcon: const Icon(Icons.key),
@@ -163,7 +228,9 @@ class Register extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 2.5,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            register();
+                          },
                           style: ButtonStyle(
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
