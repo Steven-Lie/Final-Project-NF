@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:project_management/register.dart';
 import 'package:http/http.dart' as http;
+import 'package:project_management/workspace.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -11,26 +13,40 @@ class Login extends StatelessWidget {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void login() async {
-    try {
-      var response = await http.post(
+  @override
+  Widget build(BuildContext context) {
+    final sMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    void login() async {
+      try {
+        var response = await http.post(
           Uri.parse('https://api2.sib3.nurulfikri.com/api/auth/login'),
           body: {
             'email': _emailController.text,
             'password': _passwordController.text,
-          });
+          },
+        );
 
-      if (response.statusCode == 200) {
         var responseBody = jsonDecode(response.body);
-        print(responseBody);
+        if (responseBody['code'] == "00") {
+          navigator.pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const Workspace(),
+            ),
+          );
+        } else {
+          sMessenger.showSnackBar(
+            SnackBar(
+              content: Text(responseBody['info']),
+            ),
+          );
+        }
+      } catch (e) {
+        log(e.toString());
       }
-    } catch (e) {
-      print(e);
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -163,8 +179,7 @@ class Login extends StatelessWidget {
                             width: 4,
                           ),
                           InkWell(
-                            onTap: () => Navigator.push(
-                              context,
+                            onTap: () => navigator.pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => Register(),
                               ),
