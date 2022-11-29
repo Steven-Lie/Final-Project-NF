@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -15,9 +16,14 @@ class Register extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _passwordConfirmationController = TextEditingController();
 
-  void register() async {
-    try {
-      var response = await post(
+  @override
+  Widget build(BuildContext context) {
+    final sMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    void register() async {
+      try {
+        var response = await post(
           Uri.parse('https://api2.sib3.nurulfikri.com/api/auth/register'),
           body: {
             'first_name': _firstNameController.text,
@@ -27,27 +33,34 @@ class Register extends StatelessWidget {
             'phone_number': _phoneNumberController.text,
             'password': _passwordController.text,
             'password_confirmation': _passwordConfirmationController.text,
-          });
+          },
+        );
 
-      var responseBody = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        print(responseBody['info']);
-      } else {
-        print(responseBody['info']);
+        var responseBody = jsonDecode(response.body);
+        sMessenger.showSnackBar(
+          SnackBar(
+            content: Text(responseBody['info']),
+          ),
+        );
+
+        if (responseBody['code'] == 200) {
+          navigator.pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => Login(),
+            ),
+          );
+        }
+      } catch (e) {
+        log(e.toString());
       }
-    } catch (e) {
-      print(e);
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -261,8 +274,7 @@ class Register extends StatelessWidget {
                             width: 4,
                           ),
                           InkWell(
-                            onTap: () => Navigator.push(
-                              context,
+                            onTap: () => navigator.pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => Login(),
                               ),
@@ -274,9 +286,9 @@ class Register extends StatelessWidget {
                                 color: Color(0XFF4C53FF),
                               ),
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
