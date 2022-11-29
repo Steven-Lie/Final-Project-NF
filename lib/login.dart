@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:project_management/workspace.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -17,6 +19,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     final sMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     void login() async {
       try {
@@ -30,6 +33,7 @@ class Login extends StatelessWidget {
 
         var responseBody = jsonDecode(response.body);
         if (responseBody['code'] == "00") {
+          userProvider.setAccessToken(responseBody['data']['access_token']);
           navigator.pushReplacement(
             MaterialPageRoute(
               builder: (context) => const Workspace(),
