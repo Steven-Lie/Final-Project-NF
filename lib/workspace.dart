@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -19,21 +18,15 @@ class _WorkspaceState extends State<Workspace> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    Future<List<dynamic>> allWorkspaceService() async {
+    Future<dynamic> allWorkspaceService() async {
       var response = await get(
         Uri.parse('https://api2.sib3.nurulfikri.com/api/workspace'),
         headers: {'Authorization': 'Bearer ${userProvider.accessToken}'},
       );
 
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body)['data'];
-        return jsonResponse;
-      } else {
-        throw Exception('Failed to load data');
-      }
+      var jsonResponse = jsonDecode(response.body);
+      return jsonResponse;
     }
-
-    log(userProvider.accessToken);
 
     return Scaffold(
       appBar: AppBar(
@@ -125,14 +118,14 @@ class _WorkspaceState extends State<Workspace> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: Container(
-        child: FutureBuilder<List<dynamic>>(
-          future: allWorkspaceService(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
+      body: FutureBuilder<dynamic>(
+        future: allWorkspaceService(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data['code'] == 200) {
               return ListView.builder(
                 padding: const EdgeInsets.all(5),
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data['data'].length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -140,7 +133,7 @@ class _WorkspaceState extends State<Workspace> {
                         onTap: () {},
                         child: Container(
                           margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                           width: double.infinity,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -152,43 +145,48 @@ class _WorkspaceState extends State<Workspace> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Stack(
                                     children: [
                                       Text(
-                                        snapshot.data[index]['name'],
+                                        snapshot.data['data'][index]['name'],
                                         style: TextStyle(
-                                            foreground: Paint()
-                                              ..style = PaintingStyle.stroke
-                                              ..strokeWidth = 2
-                                              ..color = const Color.fromRGBO(
-                                                  76, 83, 255, 1),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Inter'),
+                                          foreground: Paint()
+                                            ..style = PaintingStyle.stroke
+                                            ..strokeWidth = 2
+                                            ..color = const Color.fromRGBO(
+                                                76, 83, 255, 1),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Inter',
+                                        ),
                                       ),
                                       Text(
-                                        snapshot.data[index]['name'],
+                                        snapshot.data['data'][index]['name'],
                                         style: const TextStyle(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 1),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Inter'),
+                                          color:
+                                              Color.fromRGBO(255, 255, 255, 1),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Inter',
+                                        ),
                                       ),
                                     ],
                                   ),
                                   Text(
-                                    snapshot.data[index]['description'],
+                                    snapshot.data['data'][index]['description'],
                                     style: const TextStyle(
-                                        color: Color.fromRGBO(0, 0, 0, .5),
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500,
-                                        fontFamily: 'Inter'),
+                                      color: Color.fromRGBO(0, 0, 0, .5),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Inter',
+                                    ),
                                   ),
                                 ],
                               ),
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Row(
                                     children: [
@@ -197,7 +195,8 @@ class _WorkspaceState extends State<Workspace> {
                                         color: Colors.blue.shade800,
                                       ),
                                       Text(
-                                        snapshot.data[index]['visibility'] +
+                                        snapshot.data['data'][index]
+                                                ['visibility'] +
                                             ' Visible',
                                         style: const TextStyle(
                                             fontSize: 10,
@@ -207,20 +206,20 @@ class _WorkspaceState extends State<Workspace> {
                                     ],
                                   ),
                                   Text(
-                                    'Created at : ' +
-                                        snapshot.data[index]['created_at'],
+                                    "Created at : ${snapshot.data['data'][index]['created_at']}",
                                     style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Inter'),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Inter',
+                                    ),
                                   ),
                                   Text(
-                                    'Updated at : ' +
-                                        snapshot.data[index]['updated_at'],
+                                    "Updated at : ${snapshot.data['data'][index]['updated_at']}",
                                     style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Inter'),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Inter',
+                                    ),
                                   ),
                                 ],
                               ),
@@ -233,12 +232,16 @@ class _WorkspaceState extends State<Workspace> {
                 },
               );
             } else {
-              return const Center(
-                child: CircularProgressIndicator(color: Colors.black),
+              return Center(
+                child: Text(snapshot.data['info']),
               );
             }
-          },
-        ),
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            );
+          }
+        },
       ),
     );
   }
