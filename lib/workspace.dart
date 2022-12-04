@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:project_management/login.dart';
+import 'package:project_management/create_workspace.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/widget/navigation_drawer.dart';
 import 'package:provider/provider.dart';
@@ -42,25 +42,32 @@ class _WorkspaceState extends State<Workspace> {
             fontFamily: 'Inter',
           ),
         ),
-        actions: [
-          TextButton(
-              onPressed: (() {}),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: const Color.fromRGBO(255, 255, 255, .8),
+        actions: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(top: 16, bottom: 16, right: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: const Color.fromRGBO(255, 255, 255, .8),
+            ),
+            child: TextButton(
+              onPressed: (() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateWorkspace(),
+                  ),
+                );
+              }),
+              child: const Text(
+                'Create +',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
                 ),
-                child: TextButton(
-                    onPressed: (() {}),
-                    child: const Text(
-                      'Create +',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                      ),
-                    )),
-              ))
+              ),
+            ),
+          ),
         ],
       ),
       drawer: const NavigationDrawer(),
