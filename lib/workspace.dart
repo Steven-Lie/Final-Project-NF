@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/create_workspace.dart';
+import 'package:project_management/detail_workspace.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/widget/navigation_drawer.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +85,18 @@ class _WorkspaceState extends State<Workspace> {
                   return Column(
                     children: [
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailWorkspace(
+                                workspaceName: snapshot.data['data'][index]
+                                    ['name'],
+                                workspaceId: snapshot.data['data'][index]['id'],
+                              ),
+                            ),
+                          );
+                        },
                         child: Container(
                           margin: const EdgeInsets.all(5),
                           padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
