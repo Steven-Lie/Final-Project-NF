@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/login.dart';
 import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/widget/navigation_drawer.dart';
 import 'package:provider/provider.dart';
 
 class Workspace extends StatefulWidget {
@@ -62,61 +63,7 @@ class _WorkspaceState extends State<Workspace> {
               ))
         ],
       ),
-      drawer: Drawer(
-        backgroundColor: const Color.fromRGBO(76, 83, 255, .83),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(top: 70.0),
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.workspace_premium_outlined,
-                  color: Colors.white,
-                ),
-                title: const Text(
-                  'Workspace',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                      color: Colors.white),
-                ),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.person, color: Colors.white),
-                title: const Text(
-                  'Profile',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                      color: Colors.white),
-                ),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout_outlined, color: Colors.white),
-                title: const Text(
-                  'Logout',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                      color: Colors.white),
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Login(),
-                      ));
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      drawer: const NavigationDrawer(),
       backgroundColor: Colors.white,
       body: FutureBuilder<dynamic>(
         future: allWorkspaceService(),
