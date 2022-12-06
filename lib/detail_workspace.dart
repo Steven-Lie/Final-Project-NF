@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/update_workspace.dart';
 import 'package:project_management/workspace.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +60,16 @@ class DetailWorkspace extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.edit_note)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UpdateWorkspace(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.edit_note)),
           IconButton(
               onPressed: () {
                 deleteWorkspace();
