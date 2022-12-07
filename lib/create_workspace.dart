@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/provider/user_provider.dart';
-import 'package:project_management/workspace.dart';
 import 'package:provider/provider.dart';
 
 class CreateWorkspace extends StatelessWidget {
@@ -39,11 +38,7 @@ class CreateWorkspace extends StatelessWidget {
         );
 
         if (responseBody['code'] == 200) {
-          navigator.pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const Workspace(),
-              ),
-              (route) => false);
+          navigator.pop();
         }
       } catch (e) {
         log(e.toString());
