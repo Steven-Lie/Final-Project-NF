@@ -44,27 +44,29 @@ class _WorkspaceState extends State<Workspace> {
           ),
         ),
         actions: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(top: 16, bottom: 16, right: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: const Color.fromRGBO(255, 255, 255, .8),
-            ),
-            child: TextButton(
-              onPressed: (() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateWorkspace(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: const Color.fromRGBO(255, 255, 255, .8),
+              ),
+              child: TextButton(
+                onPressed: (() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateWorkspace(),
+                    ),
+                  ).then((value) => setState(() {}));
+                }),
+                child: const Text(
+                  'Create +',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
                   ),
-                );
-              }),
-              child: const Text(
-                'Create +',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Inter',
                 ),
               ),
             ),
@@ -110,84 +112,92 @@ class _WorkspaceState extends State<Workspace> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Text(
-                                        snapshot.data['data'][index]['name'],
-                                        style: TextStyle(
-                                          foreground: Paint()
-                                            ..style = PaintingStyle.stroke
-                                            ..strokeWidth = 2
-                                            ..color = const Color.fromRGBO(
-                                                76, 83, 255, 1),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Inter',
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Text(
+                                          snapshot.data['data'][index]['name'],
+                                          style: TextStyle(
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 2
+                                              ..color = const Color.fromRGBO(
+                                                  76, 83, 255, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Inter',
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        snapshot.data['data'][index]['name'],
-                                        style: const TextStyle(
-                                          color:
-                                              Color.fromRGBO(255, 255, 255, 1),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Inter',
+                                        Text(
+                                          snapshot.data['data'][index]['name'],
+                                          style: const TextStyle(
+                                            color: Color.fromRGBO(
+                                                255, 255, 255, 1),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Inter',
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    snapshot.data['data'][index]['description'],
-                                    style: const TextStyle(
-                                      color: Color.fromRGBO(0, 0, 0, .5),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Inter',
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      snapshot.data['data'][index]
+                                          ['description'],
+                                      style: const TextStyle(
+                                        color: Color.fromRGBO(0, 0, 0, .5),
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.person,
-                                        color: Colors.blue.shade800,
-                                      ),
-                                      Text(
-                                        snapshot.data['data'][index]
-                                                ['visibility'] +
-                                            ' Visible',
-                                        style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w400,
-                                            fontFamily: 'Inter'),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    "Created at : ${snapshot.data['data'][index]['created_at']}",
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Inter',
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(
+                                          Icons.person,
+                                          color: Colors.blue.shade800,
+                                        ),
+                                        Text(
+                                          snapshot.data['data'][index]
+                                                  ['visibility'] +
+                                              ' Visible',
+                                          style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Inter'),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Text(
-                                    "Updated at : ${snapshot.data['data'][index]['updated_at']}",
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Inter',
+                                    Text(
+                                      "Created at : ${snapshot.data['data'][index]['created_at']}",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Inter',
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      "Updated at : ${snapshot.data['data'][index]['updated_at']}",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
