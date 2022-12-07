@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/splashscreen.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
-  HttpOverrides.global = new MyHttpOverrides();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => WorkspaceProvider(),
         )
       ],
       child: MaterialApp(

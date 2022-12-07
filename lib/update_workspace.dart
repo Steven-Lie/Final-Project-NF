@@ -1,14 +1,82 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/provider/workspace_provider.dart';
+import 'package:provider/provider.dart';
 
-enum ProducTypeEnum { Team, User }
+class UpdateWorkspace extends StatefulWidget {
+  const UpdateWorkspace(
+      {super.key,
+      required this.workspaceName,
+      required this.workspaceDescription,
+      required this.workspaceVisibility});
+  final String workspaceName;
+  final String workspaceDescription;
+  final String workspaceVisibility;
 
-class UpdateWorkspace extends StatelessWidget {
-  UpdateWorkspace({super.key});
+  @override
+  State<UpdateWorkspace> createState() => _UpdateWorkspaceState();
+}
 
-  ProducTypeEnum? _producTypeEnum;
+class _UpdateWorkspaceState extends State<UpdateWorkspace> {
+  String? _radioValue;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    _radioValue = widget.workspaceVisibility;
+    nameController = TextEditingController(text: widget.workspaceName);
+    descriptionController =
+        TextEditingController(text: widget.workspaceDescription);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final workspaceProvider =
+        Provider.of<WorkspaceProvider>(context, listen: false);
+    final sMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    void updateWorkspace() async {
+      try {
+        var response = await put(
+            Uri.parse(
+                'https://api2.sib3.nurulfikri.com/api/workspace/${workspaceProvider.workspaceId}'),
+            headers: {
+              'Authorization': 'Bearer ${userProvider.accessToken}'
+            },
+            body: {
+              'name': nameController.text,
+              'description': descriptionController.text,
+              'visibility': _radioValue,
+            });
+
+        var responseBody = jsonDecode(response.body);
+        sMessenger.showSnackBar(
+          SnackBar(
+            content: Text(responseBody['info']),
+          ),
+        );
+
+        if (responseBody['code'] == 200) {
+          workspaceProvider.setId(responseBody['data']['id']);
+          workspaceProvider.setName(responseBody['data']['name']);
+          workspaceProvider.setDescription(responseBody['data']['description']);
+          workspaceProvider.setVisibility(responseBody['data']['visibility']);
+          navigator.pop();
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -30,6 +98,7 @@ class UpdateWorkspace extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     labelText: 'Workspace Name',
                     enabledBorder: OutlineInputBorder(
@@ -52,6 +121,7 @@ class UpdateWorkspace extends StatelessWidget {
                   height: 16.0,
                 ),
                 TextFormField(
+                  controller: descriptionController,
                   decoration: InputDecoration(
                     labelText: 'Description',
                     enabledBorder: OutlineInputBorder(
@@ -76,33 +146,33 @@ class UpdateWorkspace extends StatelessWidget {
                 const SizedBox(
                   height: 16.0,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Visibility',
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0xFF787878),
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0XFF4C53FF),
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    helperText:
-                        "Get your members on board with a few words about your workspace",
-                    alignLabelWithHint: true,
-                  ),
-                  maxLines: 4,
+                const Text("Visibility"),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                RadioListTile(
+                  value: "team",
+                  groupValue: _radioValue,
+                  onChanged: (value) => setState(() {
+                    _radioValue = value;
+                  }),
+                  title: const Text('Team'),
+                ),
+                RadioListTile(
+                  value: "personal",
+                  groupValue: _radioValue,
+                  onChanged: (value) => setState(() {
+                    _radioValue = value;
+                  }),
+                  title: const Text('Personal'),
                 ),
                 const SizedBox(
                   height: 16.0,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    updateWorkspace();
+                  },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(

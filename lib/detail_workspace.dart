@@ -4,19 +4,24 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/update_workspace.dart';
 import 'package:project_management/workspace.dart';
 import 'package:provider/provider.dart';
 
-class DetailWorkspace extends StatelessWidget {
-  const DetailWorkspace(
-      {super.key, required this.workspaceName, required this.workspaceId});
-  final String workspaceName;
-  final String workspaceId;
+class DetailWorkspace extends StatefulWidget {
+  const DetailWorkspace({super.key});
 
+  @override
+  State<DetailWorkspace> createState() => _DetailWorkspaceState();
+}
+
+class _DetailWorkspaceState extends State<DetailWorkspace> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final workspaceProvider =
+        Provider.of<WorkspaceProvider>(context, listen: false);
     final sMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
 
@@ -24,7 +29,7 @@ class DetailWorkspace extends StatelessWidget {
       try {
         var response = await delete(
           Uri.parse(
-              'https://api2.sib3.nurulfikri.com/api/workspace/$workspaceId'),
+              'https://api2.sib3.nurulfikri.com/api/workspace/${workspaceProvider.workspaceId}'),
           headers: {'Authorization': 'Bearer ${userProvider.accessToken}'},
         );
 
@@ -52,7 +57,7 @@ class DetailWorkspace extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          workspaceName,
+          workspaceProvider.workspaceName,
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -65,8 +70,16 @@ class DetailWorkspace extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UpdateWorkspace(),
+                    builder: (context) => UpdateWorkspace(
+                      workspaceName: workspaceProvider.workspaceName,
+                      workspaceDescription:
+                          workspaceProvider.workspaceDescription,
+                      workspaceVisibility:
+                          workspaceProvider.workspaceVisibility,
+                    ),
                   ),
+                ).then(
+                  (value) => setState(() {}),
                 );
               },
               icon: const Icon(Icons.edit_note)),

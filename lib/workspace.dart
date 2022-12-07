@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:project_management/create_workspace.dart';
 import 'package:project_management/detail_workspace.dart';
 import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/widget/navigation_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,8 @@ class _WorkspaceState extends State<Workspace> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final workspaceProvider =
+        Provider.of<WorkspaceProvider>(context, listen: false);
 
     Future<dynamic> allWorkspaceService() async {
       var response = await get(
@@ -58,7 +61,9 @@ class _WorkspaceState extends State<Workspace> {
                     MaterialPageRoute(
                       builder: (context) => CreateWorkspace(),
                     ),
-                  ).then((value) => setState(() {}));
+                  ).then(
+                    (value) => setState(() {}),
+                  );
                 }),
                 child: const Text(
                   'Create +',
@@ -88,15 +93,22 @@ class _WorkspaceState extends State<Workspace> {
                     children: [
                       InkWell(
                         onTap: () {
+                          workspaceProvider
+                              .setId(snapshot.data['data'][index]['id']);
+                          workspaceProvider
+                              .setName(snapshot.data['data'][index]['name']);
+                          workspaceProvider.setDescription(
+                              snapshot.data['data'][index]['description']);
+                          workspaceProvider.setVisibility(
+                              snapshot.data['data'][index]['visibility']);
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailWorkspace(
-                                workspaceName: snapshot.data['data'][index]
-                                    ['name'],
-                                workspaceId: snapshot.data['data'][index]['id'],
-                              ),
+                              builder: (context) => const DetailWorkspace(),
                             ),
+                          ).then(
+                            (value) => setState(() {}),
                           );
                         },
                         child: Container(
