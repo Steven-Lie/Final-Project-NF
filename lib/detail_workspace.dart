@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:project_management/invite_remove_team.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/update_workspace.dart';
@@ -67,20 +68,21 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => UpdateWorkspace(
-                      workspaceName: workspaceProvider.workspaceName,
-                      workspaceDescription:
-                          workspaceProvider.workspaceDescription,
-                      workspaceVisibility:
-                          workspaceProvider.workspaceVisibility,
-                    ),
-                  ),
-                ).then(
-                  (value) => setState(() {}),
-                );
+                navigator
+                    .push(
+                      MaterialPageRoute(
+                        builder: (context) => UpdateWorkspace(
+                          workspaceName: workspaceProvider.workspaceName,
+                          workspaceDescription:
+                              workspaceProvider.workspaceDescription,
+                          workspaceVisibility:
+                              workspaceProvider.workspaceVisibility,
+                        ),
+                      ),
+                    )
+                    .then(
+                      (value) => setState(() {}),
+                    );
               },
               icon: const Icon(Icons.edit_note)),
           IconButton(
@@ -110,7 +112,15 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
                 );
               },
               icon: const Icon(Icons.delete)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.person_add)),
+          IconButton(
+              onPressed: () {
+                navigator.push(
+                  MaterialPageRoute(
+                    builder: (context) => const InviteRemoveTeam(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.person_add)),
         ],
       ),
     );
