@@ -85,7 +85,29 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
               icon: const Icon(Icons.edit_note)),
           IconButton(
               onPressed: () {
-                deleteWorkspace();
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    actionsPadding: const EdgeInsets.only(bottom: 20.0),
+                    title: const Text("Delete This Workspace?"),
+                    content:
+                        const Text("Deleted items will be permanently deleted"),
+                    actionsAlignment: MainAxisAlignment.spaceEvenly,
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () => navigator.pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF787878),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => deleteWorkspace(),
+                        child: const Text("Delete"),
+                      ),
+                    ],
+                  ),
+                );
               },
               icon: const Icon(Icons.delete)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.person_add)),
