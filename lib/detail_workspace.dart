@@ -9,6 +9,7 @@ import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/update_workspace.dart';
 import 'package:project_management/workspace.dart';
 import 'package:provider/provider.dart';
+import 'package:timelines/timelines.dart';
 
 class DetailWorkspace extends StatefulWidget {
   const DetailWorkspace({super.key});
@@ -25,6 +26,23 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
         Provider.of<WorkspaceProvider>(context, listen: false);
     final sMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+
+    List<dynamic> openTask = [];
+    List<dynamic> inProgressTask = [];
+    List<dynamic> completedTask = [];
+
+    Future<dynamic> getWorkspace() async {
+      try {
+        var response = await get(
+          Uri.parse(
+              'https://api2.sib3.nurulfikri.com/api/workspace/${workspaceProvider.workspaceId}'),
+          headers: {'Authorization': 'Bearer ${userProvider.accessToken}'},
+        );
+        return jsonDecode(response.body);
+      } catch (e) {
+        log(e.toString());
+      }
+    }
 
     void deleteWorkspace() async {
       try {
@@ -84,7 +102,7 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
                       (value) => setState(() {}),
                     );
               },
-              icon: const Icon(Icons.edit_note)),
+              icon: const Icon(Icons.edit)),
           IconButton(
               onPressed: () {
                 showDialog(
@@ -122,6 +140,153 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
               },
               icon: const Icon(Icons.person_add)),
         ],
+      ),
+      body: FutureBuilder<dynamic>(
+        future: getWorkspace(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data['code'] == 200) {
+              for (var task in snapshot.data['data']['tasks']) {
+                if (task['progress'] == "OPEN") {
+                  openTask.add(task);
+                } else if (task['progress'] == "INPROGRESS") {
+                  inProgressTask.add(task);
+                } else {
+                  completedTask.add(task);
+                }
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color(0xFF4CD336),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 16.0),
+                        child: Text(
+                          'OPEN',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    Timeline1(
+                      color: const Color(0xFF4CD336),
+                      data: openTask,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color(0xFFFD964C),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 16.0),
+                        child: Text(
+                          'IN PROGRESS',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    Timeline1(
+                      color: const Color(0xFFFD964C),
+                      data: inProgressTask,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: const Color(0XFF4C53FF),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 16.0),
+                        child: Text(
+                          'COMPLETED',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    Timeline1(
+                      color: const Color(0XFF4C53FF),
+                      data: inProgressTask,
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Center(
+                child: Text(snapshot.data['info']),
+              );
+            }
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.black),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: const Text('Task'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.pink,
+      ),
+    );
+  }
+}
+
+class Timeline1 extends StatelessWidget {
+  const Timeline1({
+    Key? key,
+    required this.color,
+    required this.data,
+  }) : super(key: key);
+  final Color color;
+  final List<dynamic> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return FixedTimeline.tileBuilder(
+      theme: TimelineThemeData(
+        nodePosition: 0,
+        color: color,
+        connectorTheme: const ConnectorThemeData(
+          thickness: 3.0,
+        ),
+      ),
+      builder: TimelineTileBuilder.connectedFromStyle(
+        connectionDirection: ConnectionDirection.before,
+        lastConnectorStyle: ConnectorStyle.transparent,
+        connectorStyleBuilder: (context, index) => ConnectorStyle.solidLine,
+        indicatorStyleBuilder: (context, index) => IndicatorStyle.dot,
+        itemCount: data.length,
+        contentsBuilder: (context, index) => InkWell(
+          onTap: () {},
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  data[index]['title'],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
