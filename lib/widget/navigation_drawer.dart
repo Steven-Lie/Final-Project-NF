@@ -1,5 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:project_management/login.dart';
+import 'package:project_management/provider/user_provider.dart';
+import 'package:project_management/workspace.dart';
+import 'package:provider/provider.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({
@@ -8,6 +15,39 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final sMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    void logout() async {
+      try {
+        var response = await post(
+          Uri.parse('https://api2.sib3.nurulfikri.com/api/auth/logout'),
+          headers: {'Authorization': 'Bearer ${userProvider.accessToken}'},
+        );
+
+        if (response.statusCode == 200) {
+          var responseBody = jsonDecode(response.body);
+          sMessenger.showSnackBar(
+            SnackBar(
+              content: Text(responseBody['info']),
+            ),
+          );
+
+          navigator.pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => Login(),
+            ),
+            (route) => false,
+          );
+
+          userProvider.setAccessToken("");
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+
     return Drawer(
       backgroundColor: const Color.fromRGBO(76, 83, 255, .83),
       child: SingleChildScrollView(
@@ -27,7 +67,14 @@ class NavigationDrawer extends StatelessWidget {
                     fontFamily: 'Inter',
                     color: Colors.white),
               ),
-              onTap: () {},
+              onTap: () {
+                navigator.pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const Workspace(),
+                  ),
+                  (route) => false,
+                );
+              },
             ),
             ListTile(
               leading: const Icon(Icons.person, color: Colors.white),
@@ -52,11 +99,27 @@ class NavigationDrawer extends StatelessWidget {
                     color: Colors.white),
               ),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Login(),
-                    ));
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    actionsPadding: const EdgeInsets.only(bottom: 20.0),
+                    title: const Text("Are you sure to log out?"),
+                    actionsAlignment: MainAxisAlignment.spaceEvenly,
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () => navigator.pop(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF787878),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => logout(),
+                        child: const Text("Log out"),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ],
