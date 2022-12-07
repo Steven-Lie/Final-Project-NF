@@ -156,6 +156,9 @@ class _WorkspaceState extends State<Workspace> {
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
                                     Text(
                                       snapshot.data['data'][index]
                                           ['description'],
@@ -192,16 +195,24 @@ class _WorkspaceState extends State<Workspace> {
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
                                     Text(
                                       "Created at : ${snapshot.data['data'][index]['created_at']}",
+                                      textAlign: TextAlign.end,
                                       style: const TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w400,
                                         fontFamily: 'Inter',
                                       ),
                                     ),
+                                    const SizedBox(
+                                      height: 4,
+                                    ),
                                     Text(
                                       "Updated at : ${snapshot.data['data'][index]['updated_at']}",
+                                      textAlign: TextAlign.end,
                                       style: const TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w400,
