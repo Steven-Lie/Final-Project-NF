@@ -27,6 +27,7 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final workspaceProvider =
         Provider.of<WorkspaceProvider>(context, listen: false);
+    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
     final sMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
 
@@ -181,9 +182,58 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
                         ),
                       ),
                     ),
-                    Timeline1(
-                      color: const Color(0xFF4CD336),
-                      data: openTask,
+                    FixedTimeline.tileBuilder(
+                      theme: TimelineThemeData(
+                        nodePosition: 0,
+                        color: const Color(0xFF4CD336),
+                        connectorTheme: const ConnectorThemeData(
+                          thickness: 3.0,
+                        ),
+                      ),
+                      builder: TimelineTileBuilder.connectedFromStyle(
+                        connectionDirection: ConnectionDirection.before,
+                        lastConnectorStyle: ConnectorStyle.transparent,
+                        connectorStyleBuilder: (context, index) =>
+                            ConnectorStyle.solidLine,
+                        indicatorStyleBuilder: (context, index) =>
+                            IndicatorStyle.dot,
+                        itemCount: openTask.length,
+                        contentsBuilder: (context, index) => InkWell(
+                          onTap: () {
+                            taskProvider.setTaskId(openTask[index]['id']);
+                            taskProvider.setTitle(openTask[index]['title']);
+                            taskProvider
+                                .setDescription(openTask[index]['description']);
+                            taskProvider.setStatus(openTask[index]['status']);
+                            taskProvider.setLabel(openTask[index]['label']);
+                            taskProvider
+                                .setMilestone(openTask[index]['milestone']);
+                            taskProvider
+                                .setProgress(openTask[index]['progress']);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DetailTask(),
+                              ),
+                            ).then((value) => setState(() {}));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 4.0),
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  openTask[index]['title'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 16.0,
@@ -202,9 +252,61 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
                         ),
                       ),
                     ),
-                    Timeline1(
-                      color: const Color(0xFFFD964C),
-                      data: inProgressTask,
+                    FixedTimeline.tileBuilder(
+                      theme: TimelineThemeData(
+                        nodePosition: 0,
+                        color: const Color(0xFFFD964C),
+                        connectorTheme: const ConnectorThemeData(
+                          thickness: 3.0,
+                        ),
+                      ),
+                      builder: TimelineTileBuilder.connectedFromStyle(
+                        connectionDirection: ConnectionDirection.before,
+                        lastConnectorStyle: ConnectorStyle.transparent,
+                        connectorStyleBuilder: (context, index) =>
+                            ConnectorStyle.solidLine,
+                        indicatorStyleBuilder: (context, index) =>
+                            IndicatorStyle.dot,
+                        itemCount: inProgressTask.length,
+                        contentsBuilder: (context, index) => InkWell(
+                          onTap: () {
+                            taskProvider.setTaskId(inProgressTask[index]['id']);
+                            taskProvider
+                                .setTitle(inProgressTask[index]['title']);
+                            taskProvider.setDescription(
+                                inProgressTask[index]['description']);
+                            taskProvider
+                                .setStatus(inProgressTask[index]['status']);
+                            taskProvider
+                                .setLabel(inProgressTask[index]['label']);
+                            taskProvider.setMilestone(
+                                inProgressTask[index]['milestone']);
+                            taskProvider
+                                .setProgress(inProgressTask[index]['progress']);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DetailTask(),
+                              ),
+                            ).then((value) => setState(() {}));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 4.0),
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  inProgressTask[index]['title'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 16.0,
@@ -223,9 +325,61 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
                         ),
                       ),
                     ),
-                    Timeline1(
-                      color: const Color(0XFF4C53FF),
-                      data: inProgressTask,
+                    FixedTimeline.tileBuilder(
+                      theme: TimelineThemeData(
+                        nodePosition: 0,
+                        color: const Color(0XFF4C53FF),
+                        connectorTheme: const ConnectorThemeData(
+                          thickness: 3.0,
+                        ),
+                      ),
+                      builder: TimelineTileBuilder.connectedFromStyle(
+                        connectionDirection: ConnectionDirection.before,
+                        lastConnectorStyle: ConnectorStyle.transparent,
+                        connectorStyleBuilder: (context, index) =>
+                            ConnectorStyle.solidLine,
+                        indicatorStyleBuilder: (context, index) =>
+                            IndicatorStyle.dot,
+                        itemCount: completedTask.length,
+                        contentsBuilder: (context, index) => InkWell(
+                          onTap: () {
+                            taskProvider.setTaskId(completedTask[index]['id']);
+                            taskProvider
+                                .setTitle(completedTask[index]['title']);
+                            taskProvider.setDescription(
+                                completedTask[index]['description']);
+                            taskProvider
+                                .setStatus(completedTask[index]['status']);
+                            taskProvider
+                                .setLabel(completedTask[index]['label']);
+                            taskProvider.setMilestone(
+                                completedTask[index]['milestone']);
+                            taskProvider
+                                .setProgress(completedTask[index]['progress']);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DetailTask(),
+                              ),
+                            ).then((value) => setState(() {}));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 4.0),
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  completedTask[index]['title'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -255,67 +409,6 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
         label: const Text('Task'),
         icon: const Icon(Icons.add),
         backgroundColor: Colors.pink,
-      ),
-    );
-  }
-}
-
-class Timeline1 extends StatefulWidget {
-  const Timeline1({
-    Key? key,
-    required this.color,
-    required this.data,
-  }) : super(key: key);
-  final Color color;
-  final List<dynamic> data;
-
-  @override
-  State<Timeline1> createState() => _Timeline1State();
-}
-
-class _Timeline1State extends State<Timeline1> {
-  @override
-  Widget build(BuildContext context) {
-    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
-
-    return FixedTimeline.tileBuilder(
-      theme: TimelineThemeData(
-        nodePosition: 0,
-        color: widget.color,
-        connectorTheme: const ConnectorThemeData(
-          thickness: 3.0,
-        ),
-      ),
-      builder: TimelineTileBuilder.connectedFromStyle(
-        connectionDirection: ConnectionDirection.before,
-        lastConnectorStyle: ConnectorStyle.transparent,
-        connectorStyleBuilder: (context, index) => ConnectorStyle.solidLine,
-        indicatorStyleBuilder: (context, index) => IndicatorStyle.dot,
-        itemCount: widget.data.length,
-        contentsBuilder: (context, index) => InkWell(
-          onTap: () {
-            taskProvider.setTaskId(widget.data[index]['id']);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DetailTask(),
-              ),
-            ).then((value) => setState(() {}));
-          },
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  widget.data[index]['title'],
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

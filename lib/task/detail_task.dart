@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/provider/task_provider.dart';
+import 'package:project_management/task/update_task.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/user_provider.dart';
@@ -72,7 +73,24 @@ class _DetailTaskState extends State<DetailTask> {
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+          IconButton(
+              onPressed: () {
+                navigator
+                    .push(
+                      MaterialPageRoute(
+                        builder: (context) => UpdateTask(
+                          title: taskProvider.title,
+                          description: taskProvider.description,
+                          status: taskProvider.status,
+                          label: taskProvider.label,
+                          milestone: taskProvider.milestone,
+                          progress: taskProvider.progress,
+                        ),
+                      ),
+                    )
+                    .then((value) => setState(() {}));
+              },
+              icon: const Icon(Icons.edit)),
           IconButton(
               onPressed: () {
                 showDialog(
