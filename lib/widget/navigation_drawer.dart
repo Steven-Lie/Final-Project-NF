@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/login.dart';
+import 'package:project_management/profile.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/workspace.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +87,13 @@ class NavigationDrawer extends StatelessWidget {
                     fontFamily: 'Inter',
                     color: Colors.white),
               ),
-              onTap: () {},
+              onTap: () {
+                navigator.pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const Profil(),
+                    ),
+                    (route) => false);
+              },
             ),
             ListTile(
               leading: const Icon(Icons.logout_outlined, color: Colors.white),
