@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:project_management/login.dart';
+import 'package:project_management/auth/login.dart';
 
 class Register extends StatelessWidget {
   Register({super.key});

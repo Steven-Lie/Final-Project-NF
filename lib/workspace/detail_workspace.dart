@@ -3,12 +3,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:project_management/create_task.dart';
-import 'package:project_management/invite_remove_team.dart';
+import 'package:project_management/task/create_task.dart';
+import 'package:project_management/workspace/invite_remove_team.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/provider/workspace_provider.dart';
-import 'package:project_management/update_workspace.dart';
-import 'package:project_management/workspace.dart';
+import 'package:project_management/workspace/update_workspace.dart';
+import 'package:project_management/workspace/workspace.dart';
 import 'package:provider/provider.dart';
 import 'package:timelines/timelines.dart';
 

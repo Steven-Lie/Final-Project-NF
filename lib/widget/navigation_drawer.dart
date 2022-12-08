@@ -3,10 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:project_management/login.dart';
-import 'package:project_management/profile.dart';
+import 'package:project_management/auth/login.dart';
+import 'package:project_management/profile/profile.dart';
 import 'package:project_management/provider/user_provider.dart';
-import 'package:project_management/workspace.dart';
+import 'package:project_management/workspace/workspace.dart';
 import 'package:provider/provider.dart';
 
 class NavigationDrawer extends StatelessWidget {

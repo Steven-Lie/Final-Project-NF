@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:project_management/create_workspace.dart';
-import 'package:project_management/detail_workspace.dart';
+import 'package:project_management/workspace/create_workspace.dart';
+import 'package:project_management/workspace/detail_workspace.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/widget/navigation_drawer.dart';

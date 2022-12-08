@@ -3,9 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:project_management/provider/user_provider.dart';
-import 'package:project_management/register.dart';
+import 'package:project_management/auth/register.dart';
 import 'package:http/http.dart' as http;
-import 'package:project_management/workspace.dart';
+import 'package:project_management/workspace/workspace.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
