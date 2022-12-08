@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:project_management/provider/task_provider.dart';
 import 'package:project_management/task/create_task.dart';
+import 'package:project_management/task/detail_task.dart';
 import 'package:project_management/workspace/invite_remove_team.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/provider/workspace_provider.dart';
@@ -258,7 +260,7 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
   }
 }
 
-class Timeline1 extends StatelessWidget {
+class Timeline1 extends StatefulWidget {
   const Timeline1({
     Key? key,
     required this.color,
@@ -268,11 +270,18 @@ class Timeline1 extends StatelessWidget {
   final List<dynamic> data;
 
   @override
+  State<Timeline1> createState() => _Timeline1State();
+}
+
+class _Timeline1State extends State<Timeline1> {
+  @override
   Widget build(BuildContext context) {
+    final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+
     return FixedTimeline.tileBuilder(
       theme: TimelineThemeData(
         nodePosition: 0,
-        color: color,
+        color: widget.color,
         connectorTheme: const ConnectorThemeData(
           thickness: 3.0,
         ),
@@ -282,9 +291,17 @@ class Timeline1 extends StatelessWidget {
         lastConnectorStyle: ConnectorStyle.transparent,
         connectorStyleBuilder: (context, index) => ConnectorStyle.solidLine,
         indicatorStyleBuilder: (context, index) => IndicatorStyle.dot,
-        itemCount: data.length,
+        itemCount: widget.data.length,
         contentsBuilder: (context, index) => InkWell(
-          onTap: () {},
+          onTap: () {
+            taskProvider.setTaskId(widget.data[index]['id']);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DetailTask(),
+              ),
+            ).then((value) => setState(() {}));
+          },
           child: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -292,7 +309,7 @@ class Timeline1 extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  data[index]['title'],
+                  widget.data[index]['title'],
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

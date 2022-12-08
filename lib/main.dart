@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:project_management/provider/task_provider.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/provider/workspace_provider.dart';
 import 'package:project_management/splashscreen.dart';
@@ -32,7 +33,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => WorkspaceProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TaskProvider(),
+        ),
       ],
       child: MaterialApp(
         title: 'Final Project NF',

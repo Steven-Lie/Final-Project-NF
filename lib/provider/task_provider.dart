@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TaskProvider with ChangeNotifier {
-  String _id = '';
-  String get id => _id;
+  int _id = 0;
+  int get id => _id;
 
-  setTaskId(String id) {
+  setTaskId(int id) {
     _id = id;
   }
 }
