@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:project_management/provider/task_provider.dart';
+import 'package:project_management/task/add_remove_assignee.dart';
 import 'package:project_management/task/update_task.dart';
 import 'package:provider/provider.dart';
 
@@ -118,6 +119,15 @@ class _DetailTaskState extends State<DetailTask> {
                 );
               },
               icon: const Icon(Icons.delete)),
+          IconButton(
+              onPressed: () {
+                navigator.push(
+                  MaterialPageRoute(
+                    builder: (context) => const AddRemoveAssignee(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.person_add)),
         ],
       ),
       body: FutureBuilder<dynamic>(
