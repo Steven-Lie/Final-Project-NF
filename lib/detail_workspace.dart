@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:project_management/create_task.dart';
 import 'package:project_management/invite_remove_team.dart';
 import 'package:project_management/provider/user_provider.dart';
 import 'package:project_management/provider/workspace_provider.dart';
@@ -144,6 +145,9 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
       body: FutureBuilder<dynamic>(
         future: getWorkspace(),
         builder: (context, snapshot) {
+          openTask.clear();
+          inProgressTask.clear();
+          completedTask.clear();
           if (snapshot.hasData) {
             if (snapshot.data['code'] == 200) {
               for (var task in snapshot.data['data']['tasks']) {
@@ -237,7 +241,15 @@ class _DetailWorkspaceState extends State<DetailWorkspace> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          navigator
+              .push(
+                MaterialPageRoute(
+                  builder: (context) => CreateTask(),
+                ),
+              )
+              .then((value) => setState(() {}));
+        },
         label: const Text('Task'),
         icon: const Icon(Icons.add),
         backgroundColor: Colors.pink,
